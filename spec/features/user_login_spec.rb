@@ -12,22 +12,16 @@ RSpec.feature "UserLogins", type: :feature, js: true do
     )
   end
 
-  scenario "They can login" do
-
+  scenario "User can login" do 
     visit root_path
     find_link('Login').click
-
-    fill_in "Email:", with: 'test@test.com'
-    fill_in "Password:", with: '1234567'
+    expect(page).to have_text 'Email:'
+    expect(page).to have_text 'Password:'
+    fill_in 'email', with: 'test@test.com'
+    fill_in 'password', with: '1234567'
     save_screenshot
-    click_button "Submit"
-
-    expect(page).to have_content("Welcome #{@user.name}")
-
-    click_link 'Logout'
-
-    expect(page).to have_content("Login")
-
-    # save_screenshot
+    find_button('Submit').click
+    expect(page).to have_content('Products')
+    expect(page).to have_content('Logout')
   end
 end
