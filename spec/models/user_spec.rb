@@ -50,7 +50,7 @@ RSpec.describe User, type: :model do
   end
 
   describe '.authenticate_with_credentials' do
-
+    
     it "should authenticate user if credentials match an existing user information" do
       user = User.new(first_name: 'Artemis', last_name: 'Hades', email: 'test@test.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
       user.save
@@ -58,7 +58,33 @@ RSpec.describe User, type: :model do
       expect(user_test).to eql(user)
     end
 
-    
+    it "should should return nil if users credentials do not match existing user password" do 
+      user = User.new(first_name: 'Artemis', last_name: 'Hades', email: 'test@test.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
+      user.save
+      user_test = User.authenticate_with_credentials("test@test.com", 'C^t+6C!!!!!')
+      expect(user_test).to be_nil
+    end
+
+    it "should should return nil if users credentials do not match existing user email" do 
+      user = User.new(first_name: 'Artemis', last_name: 'Hades', email: 'test@test.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
+      user.save
+      user_test = User.authenticate_with_credentials("test2@test.com", 'C^t+6C')
+      expect(user_test).to be_nil
+    end
+
+    it "should authenticate if visitor types in a few spaces before and/or after their email address" do
+      user = User.new(first_name: 'Artemis', last_name: 'Hades', email: 'test@test.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
+      user.save
+      user_test = User.authenticate_with_credentials("   test@test.com   ", 'C^t+6C')
+      expect(user_test).to eq(user)
+    end
+
+    it "should authenticate if visitor types in wrong case for their email" do
+      user = User.new(first_name: 'Artemis', last_name: 'Hades', email: 'tEST@test.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
+      user.save
+      user_test = User.authenticate_with_credentials("test@test.com", 'C^t+6C')
+      expect(user_test).to eq(user)
+    end
 
   end
 
