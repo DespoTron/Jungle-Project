@@ -16,7 +16,7 @@ RSpec.describe User, type: :model do
       expect(user).to_not be_valid
     end
 
-    it "validates the email" do
+    it "cannot create email if it is not unique" do
       user = User.new(first_name: 'Zeus', last_name: 'Smith', email: 'test@test.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
       user.save
       userTwo = User.new(first_name: 'Zeus', last_name: 'Smith', email: 'TEST@TEST.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
@@ -24,7 +24,29 @@ RSpec.describe User, type: :model do
       expect(userTwo).to_not be_valid
     end
 
-    
+    it "cannot create a user without a password" do
+      user = User.new(first_name: 'Zeus', last_name: 'Smith', email: 'test@test.com', password: nil, password_confirmation: nil)
+      user.save
+      expect(user).to_not be_valid
+    end
+
+    it "should have a password with a minimum length of 6 characters" do
+      user = User.new(first_name: 'Zeus', last_name: 'Smith', email: 'test@test.com', password: 'hello', password_confirmation: 'hello')
+      user.save
+      expect(user).to_not be_valid
+    end
+
+    it "should not create a user without the first name" do
+      user = User.new(last_name: 'Smith', email: 'test@test.com', password: 'hello', password_confirmation: 'hello')
+      user.save
+      expect(user).to_not be_valid
+    end
+
+    it "should not create a user without the last name" do
+      user = User.new(first_name: 'Zeus', email: 'test@test.com', password: 'hello', password_confirmation: 'hello')
+      user.save
+      expect(user).to_not be_valid
+    end
 
   end
 end
