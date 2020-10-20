@@ -47,6 +47,19 @@ RSpec.describe User, type: :model do
       user.save
       expect(user).to_not be_valid
     end
+  end
+
+  describe '.authenticate_with_credentials' do
+
+    it "should authenticate user if credentials match an existing user information" do
+      user = User.new(first_name: 'Artemis', last_name: 'Hades', email: 'test@test.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
+      user.save
+      user_test = User.authenticate_with_credentials("test@test.com", 'C^t+6C')
+      expect(user_test).to eql(user)
+    end
+
+    
 
   end
+
 end
