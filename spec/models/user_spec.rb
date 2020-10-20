@@ -16,6 +16,14 @@ RSpec.describe User, type: :model do
       expect(user).to_not be_valid
     end
 
+    it "validates the email" do
+      user = User.new(first_name: 'Zeus', last_name: 'Smith', email: 'test@test.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
+      user.save
+      userTwo = User.new(first_name: 'Zeus', last_name: 'Smith', email: 'TEST@TEST.com', password: 'C^t+6C', password_confirmation: 'C^t+6C')
+      userTwo.save
+      expect(userTwo).to_not be_valid
+    end
+
     
 
   end
